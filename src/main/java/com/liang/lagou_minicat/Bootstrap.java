@@ -57,18 +57,13 @@ public class Bootstrap {
 
             InputStream inputStream = socket.getInputStream();
 
-            int count = 0;
 
-            while (count == 0){
+            //封装request对象
+            Request request = new Request(inputStream);
 
-                count = inputStream.available();
-            }
+            Response response = new Response(socket.getOutputStream());
 
-            byte[] bytes = new byte[count];
-
-            inputStream.read(bytes);
-
-            System.out.println(new String(bytes));
+            response.outputHtml(request.getUrl());
 
             socket.close();
         }
