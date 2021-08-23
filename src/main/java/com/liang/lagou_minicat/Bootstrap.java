@@ -34,21 +34,43 @@ public class Bootstrap {
 
         System.out.println("minicat----start");
 
-        while (true){
+        //1.0
+//        while (true){
+//
+//            Socket socket = serverSocket.accept();
+//
+//            OutputStream outputStream = socket.getOutputStream();
+//
+//            String str = "hello world";
+//
+//            String httpHeader200 = HttpProtocolUtil.getHttpHeader200(str.getBytes().length);
+//
+//
+//            outputStream.write((httpHeader200+str).getBytes());
+//
+//            socket.close();
+//        }
 
+        //2.0
+        while (true){
             Socket socket = serverSocket.accept();
 
-            OutputStream outputStream = socket.getOutputStream();
+            InputStream inputStream = socket.getInputStream();
 
-            String str = "hello world";
+            int count = 0;
 
-            String httpHeader200 = HttpProtocolUtil.getHttpHeader200(str.getBytes().length);
+            while (count == 0){
 
+                count = inputStream.available();
+            }
 
-            outputStream.write((httpHeader200+str).getBytes());
+            byte[] bytes = new byte[count];
+
+            inputStream.read(bytes);
+
+            System.out.println(new String(bytes));
 
             socket.close();
-
         }
 
 
