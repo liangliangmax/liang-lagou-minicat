@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 public class Bootstrap {
 
@@ -60,6 +61,7 @@ public class Bootstrap {
 //            socket.close();
 //        }
 
+
 //        //2.0
 //        while (true){
 //            Socket socket = serverSocket.accept();
@@ -79,6 +81,43 @@ public class Bootstrap {
 
         //3.0
         //解析web.xml
+//        try {
+//            loadServlet();
+//        } catch (DocumentException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        }
+//
+//        while (true){
+//
+//            Socket socket = serverSocket.accept();
+//
+//            InputStream inputStream = socket.getInputStream();
+//
+//            //封装request对象
+//            Request request = new Request(inputStream);
+//
+//            Response response = new Response(socket.getOutputStream());
+//
+//            HttpServlet httpServlet = servletMap.get(request.getUrl());
+//
+//            if(httpServlet == null){
+//                response.outputHtml(request.getUrl());
+//            }else {
+//                httpServlet.service(request,response);
+//            }
+//
+//            socket.close();
+//
+//        }
+
+        //4.0 多线程
+        //解析web.xml
         try {
             loadServlet();
         } catch (DocumentException e) {
@@ -91,32 +130,40 @@ public class Bootstrap {
             e.printStackTrace();
         }
 
+        //不使用线程池
+//        while (true){
+//
+//            Socket socket = serverSocket.accept();
+//            RequestProcessor requestProcessor = new RequestProcessor(socket,servletMap);
+//
+//            new Thread(requestProcessor).start();
+//        }
+
+        //定义线程池
+        int corePoolSize = 10;
+        int maximumPoolSize = 50;
+        long keepAliveTime = 100;
+        TimeUnit unit = TimeUnit.SECONDS;
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(50);
+        ThreadFactory threadFactory = Executors.defaultThreadFactory();
+        RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+                corePoolSize,
+                maximumPoolSize,
+                keepAliveTime,
+                unit,
+                workQueue,
+                threadFactory,
+                handler
+        );
+
+        //使用线程池
         while (true){
-
+            System.out.println("使用线程池");
             Socket socket = serverSocket.accept();
-
-            InputStream inputStream = socket.getInputStream();
-
-
-            //封装request对象
-            Request request = new Request(inputStream);
-
-            Response response = new Response(socket.getOutputStream());
-
-
-            HttpServlet httpServlet = servletMap.get(request.getUrl());
-
-            if(httpServlet == null){
-                response.outputHtml(request.getUrl());
-
-            }else {
-
-                httpServlet.service(request,response);
-
-            }
-
-            socket.close();
-
+            RequestProcessor requestProcessor = new RequestProcessor(socket,servletMap);
+            threadPoolExecutor.execute(requestProcessor);
         }
 
 
