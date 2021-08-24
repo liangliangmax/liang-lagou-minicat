@@ -9,7 +9,9 @@
 2.将项目放到appBase中，结构是
 项目名/WEB-INF
     |-- classes
+    
         |-- com.xxx.xxx.xx
+        
     |-- web.xml
     
 3.运行minicat中Bootstrap启动文件，文件启动过程中会读取server.xml，解析server过程中
