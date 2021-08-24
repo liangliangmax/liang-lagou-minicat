@@ -5,6 +5,7 @@
 启动流程：
 
 1.先修改minicat/resources/server.xml文件，将appBase指向项目部署的地方
+
 2.将项目放到appBase中，结构是
 项目名/WEB-INF
     |-- classes
