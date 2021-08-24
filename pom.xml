@@ -6,9 +6,13 @@
 
 	<groupId>com.liang</groupId>
 	<artifactId>liang-lagou-minicat</artifactId>
+	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
-
-
+	<modules>
+		<module>minicat</module>
+		<module>lagou-servlet-api</module>
+		<module>lagou-servlet-demo</module>
+	</modules>
 
 	<dependencies>
 
@@ -28,7 +32,6 @@
 
 
 	<build>
-		<finalName>stock-management-microservice</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
